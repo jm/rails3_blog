@@ -1,13 +1,12 @@
 class PostsController < ApplicationController
+  respond_to :html, :xml
+  
   # GET /posts
   # GET /posts.xml
   def index
     @posts = Post.all
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @posts }
-    end
+    respond_with @posts
   end
 
   # GET /posts/1
@@ -15,10 +14,7 @@ class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
 
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @post }
-    end
+    respond_with @post    
   end
 
   # GET /posts/new
@@ -26,10 +22,7 @@ class PostsController < ApplicationController
   def new
     @post = Post.new
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @post }
-    end
+    respond_with @post
   end
 
   # GET /posts/1/edit
@@ -42,15 +35,8 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(params[:post])
 
-    respond_to do |format|
-      if @post.save
-        format.html { redirect_to(@post, :notice => 'Post was successfully created.') }
-        format.xml  { render :xml => @post, :status => :created, :location => @post }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @post.errors, :status => :unprocessable_entity }
-      end
-    end
+    flash[:notice] = 'Post was successfully created.' if @post.save
+    respond_with @post
   end
 
   # PUT /posts/1
@@ -58,15 +44,8 @@ class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
 
-    respond_to do |format|
-      if @post.update_attributes(params[:post])
-        format.html { redirect_to(@post, :notice => 'Post was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @post.errors, :status => :unprocessable_entity }
-      end
-    end
+    flash[:notice] = 'Post was successfully updated.' if @post.update_attributes(params[:post])
+    respond_with @post
   end
 
   # DELETE /posts/1
@@ -75,9 +54,6 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
     @post.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(posts_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @post
   end
 end
